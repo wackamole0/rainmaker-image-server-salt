@@ -12,12 +12,18 @@ nginx-package:
     - mode: 644
     - replace: True
 
-{% if grains['id'] == 'image.rainmaker.localdev' %}
 /var/www/nginx:
   file.directory:
     - user: root
     - group: www-data
-    - mode: 775
+    - mode: 774
+    - makedirs: True
+
+/var/www/nginx/boxes:
+  file.directory:
+    - user: rainmaker
+    - group: www-data
+    - mode: 2775
     - makedirs: True
 
 /var/www/nginx/rootfs:
@@ -40,7 +46,6 @@ nginx-package:
     - group: www-data
     - mode: 2775
     - makedirs: True
-{% endif %}
 
 nginx:
   service.running:
