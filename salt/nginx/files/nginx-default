@@ -5,7 +5,7 @@ server {
         root /var/www/nginx;
         index index.html index.htm;
 
-        server_name image.rainmaker.localdev;
+        server_name {{ pillar['image_webserver_host'] }};
 
         location / {
                 # First attempt to serve request as file, then

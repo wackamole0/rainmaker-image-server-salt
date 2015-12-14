@@ -6,11 +6,13 @@ nginx-package:
 /etc/nginx/sites-available/default:
   file.managed:
     - source: salt://rainmaker/image-server/nginx/files/nginx-default
+    - template: jinja
     - user: root
     - group: root
     - mode: 644
     - replace: True
 
+{% if grains['id'] == 'image.rainmaker.localdev' %}
 /var/www/nginx:
   file.directory:
     - user: root
@@ -38,9 +40,9 @@ nginx-package:
     - group: www-data
     - mode: 2775
     - makedirs: True
+{% endif %}
 
 nginx:
   service.running:
     - enable: True
     - reload: True
-

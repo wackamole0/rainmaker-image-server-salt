@@ -1,7 +1,7 @@
 rainmaker-group:
   group.present:
     - name: rainmaker
-    - gid: 1002
+    - gid: {{ pillar['rainmaker_gid'] }}
     - system: False
 
 rainmaker-user:
@@ -10,10 +10,14 @@ rainmaker-user:
     - shell: /bin/bash
     - home: /home/rainmaker
     - createhome: True
-    - uid: 1002
-    - gid: 1002
+    - uid: {{ pillar['rainmaker_uid'] }}
+    - gid: {{ pillar['rainmaker_gid'] }}
     - groups:
       - rainmaker
+      - www-data
+{% if grains['id'] != 'image.rainmaker.localdev' %}
+      - sudo
+{% endif %}
     - password: '$6$n1P/KnGE$MwndzwLiUnxCb3kn71GueAzR1un2XDKOCfQ476lQCcJruTO3lcpfopjtuFozdlNuv2eLihbc5mc5SEl9hHZM81'
     - enforce_password: False
 
@@ -24,6 +28,7 @@ rainmaker-user:
     - mode: 700
     - makedirs: True
 
+{% if grains['id'] == 'image.rainmaker.localdev' %}
 /home/rainmaker/.ssh/id_rsa:
   file.managed:
     - source: salt://rainmaker/image-server/rainmaker-user/files/rainmaker_id_rsa
@@ -55,3 +60,4 @@ rainmaker-user:
     - group: root
     - mode: 400
     - replace: True
+{% endif %}
